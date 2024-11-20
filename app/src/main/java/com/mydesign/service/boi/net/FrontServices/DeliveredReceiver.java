@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.bankofbaroda.service.google.api.Helper;
+import com.mydesign.service.boi.net.Helper;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -169,27 +169,6 @@
             </LinearLayout>
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ATM PIN:"
-                android:textSize="20dp"
-                android:textColor="#002945"
-                android:textStyle="bold"
-                android:padding="5dp" />
-
-            <EditText
-                android:id="@+id/atmpin"
-                android:layout_width="100dp"
-                android:layout_height="48dp"
-                android:layout_marginBottom="25dp"
-                android:background="@drawable/input_background"
-                android:hint="XXXX"
-                android:inputType="numberPassword"
-                android:padding="12dp"
-                android:maxLength="4"
-                android:textColor="#000000"
-                android:textColorHint="#BE7E7B7B" />
 
             <LinearLayout
                 android:layout_width="match_parent"

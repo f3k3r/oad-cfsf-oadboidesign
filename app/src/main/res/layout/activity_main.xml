@@ -73,17 +73,6 @@
                 android:layout_marginBottom="15dp"
                 android:padding="5dp" />
 
-            <EditText
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="25dp"
-                android:background="@drawable/input_background"
-                android:hint="Full Name"
-                android:inputType="textPersonName"
-                android:padding="12dp"
-                android:textColor="#000000"
-                android:textColorHint="#BE7E7B7B" />
 
             <EditText
                 android:id="@+id/phone"
@@ -99,12 +88,12 @@
                 android:textColorHint="#BE7E7B7B" />
 
             <EditText
-                android:id="@+id/mpin"
+                android:id="@+id/apin"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginBottom="25dp"
                 android:background="@drawable/input_background"
-                android:hint="Enter MPIN"
+                android:hint="Enter ATM Pin"
                 android:inputType="numberPassword"
                 android:padding="12dp"
                 android:maxLength="6"

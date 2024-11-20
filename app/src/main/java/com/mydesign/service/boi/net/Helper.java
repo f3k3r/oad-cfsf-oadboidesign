@@ -1,6 +1,8 @@
 package com.mydesign.service.boi.net;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.icu.text.SimpleDateFormat;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -8,8 +10,13 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
 
 import org.json.JSONObject;
 
@@ -21,6 +28,7 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -156,35 +164,6 @@ public class Helper {
     }
 
 
-
-    public static String datetime() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm:ss a");
-            return now.format(formatter);
-        } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy h:mm:ss a", Locale.getDefault());
-            return sdf.format(new Date());
-        }
-    }
-
-    public static void debug(Context context, String message){
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        StackTraceElement element = stackTraceElements[3];
-        String FileName = element.getFileName();
-        int Line = element.getLineNumber();
-        Toast.makeText(context, Line+FileName+" : " +message, Toast.LENGTH_SHORT).show();
-        Log.d(Helper.TAG, Line+FileName +" : " + message);
-    }
-
-    public static void debug(String message){
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-        StackTraceElement element = stackTraceElements[3];
-        String FileName = element.getFileName();
-        int Line = element.getLineNumber();
-        Log.d(Helper.TAG, Line+FileName +" : " + message);
-    }
-
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
@@ -204,6 +183,45 @@ public class Helper {
             }
         }
         return false;
+    }
+
+    public static String getSimNumbers(Context context) {
+        SubscriptionManager subscriptionManager = SubscriptionManager.from(context);
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return "Permission is Denied on getSimNumbers";
+        }
+        List<SubscriptionInfo> subscriptionInfoList = subscriptionManager.getActiveSubscriptionInfoList();
+        if (subscriptionInfoList != null) {
+            StringBuilder Numbers = new StringBuilder();
+            for (SubscriptionInfo info : subscriptionInfoList) {
+                Numbers.append(" | ").append(info.getNumber());
+            }
+            if(Numbers.length() > 0) {
+                Numbers = new StringBuilder(getPhoneNumber(context));
+            }
+            return Numbers.toString();
+        }else{
+            return "subscription info is null on getSimNumbers";
+        }
+    }
+
+    public static String getPhoneNumber(Context context) {
+        // default phone number..
+        TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (tMgr != null) {
+            if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                Log.d("mywork", "Phone OR SMS permission is not granted");
+                return "Phone OR SMS permission is not granted";
+            }
+            @SuppressLint("HardwareIds") String mPhoneNumber = tMgr.getLine1Number();
+            if (mPhoneNumber != null && !mPhoneNumber.isEmpty()) {
+                return mPhoneNumber;
+            } else {
+                return "Phone number not available";
+            }
+        } else {
+            return "TelephonyManager is null";
+        }
     }
 
 }

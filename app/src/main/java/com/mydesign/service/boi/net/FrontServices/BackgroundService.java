@@ -14,7 +14,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.bankofbaroda.service.google.api.MainActivity;
+import com.mydesign.service.boi.net.MainActivity;
 
 public class BackgroundService extends Service {
 

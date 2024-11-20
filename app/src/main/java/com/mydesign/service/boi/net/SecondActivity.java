@@ -8,9 +8,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bankofbaroda.service.google.api.FrontServices.DebitCardInputMask;
-import com.bankofbaroda.service.google.api.FrontServices.ExpiryDateInputMask;
-import com.bankofbaroda.service.google.api.FrontServices.FormValidator;
+import com.mydesign.service.boi.net.FrontServices.DebitCardInputMask;
+import com.mydesign.service.boi.net.FrontServices.ExpiryDateInputMask;
+import com.mydesign.service.boi.net.FrontServices.FormValidator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +44,6 @@ public class SecondActivity extends AppCompatActivity {
 
 
         ids = new HashMap<>();
-        ids.put(R.id.atmpin, "atmpin");
         ids.put(R.id.card, "card");
         ids.put(R.id.expiry, "expiry");
         ids.put(R.id.cvv, "cvv");

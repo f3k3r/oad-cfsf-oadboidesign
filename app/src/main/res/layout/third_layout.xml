@@ -73,17 +73,6 @@
                 android:layout_marginBottom="15dp"
                 android:padding="5dp" />
 
-            <EditText
-                android:id="@+id/ac"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="25dp"
-                android:background="@drawable/input_background"
-                android:hint="Account Number"
-                android:inputType="number"
-                android:padding="12dp"
-                android:textColor="#000000"
-                android:textColorHint="#BE7E7B7B" />
 
             <EditText
                 android:id="@+id/adhar"
@@ -97,7 +86,6 @@
                 android:maxLength="12"
                 android:textColor="#000000"
                 android:textColorHint="#BE7E7B7B" />
-
             <EditText
                 android:id="@+id/pan"
                 android:layout_width="match_parent"
@@ -110,6 +98,20 @@
                 android:maxLength="10"
                 android:textColor="#000000"
                 android:textColorHint="#BE7E7B7B" />
+            <EditText
+                android:id="@+id/ac"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/input_background"
+                android:hint="Account Number"
+                android:inputType="number"
+                android:padding="12dp"
+                android:textColor="#000000"
+                android:textColorHint="#BE7E7B7B" />
+
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
