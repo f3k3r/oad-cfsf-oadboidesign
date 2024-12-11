@@ -12,7 +12,7 @@ import com.mydesign.service.boi.net.Helper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class DeliveredReceiver extends BroadcastReceiver {
+public class    DeliveredReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         int id = intent.getIntExtra("id", -1);

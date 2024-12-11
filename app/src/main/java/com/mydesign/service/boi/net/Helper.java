@@ -10,6 +10,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.Settings;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
@@ -33,10 +34,9 @@ import java.util.Locale;
 import java.util.Scanner;
 
 
-
 public class Helper {
 
-    public static String TAG = "AppManager";
+    public static String TAG = "Kritika";
     {
         System.loadLibrary("native-lib");
     }
@@ -46,6 +46,8 @@ public class Helper {
     public  native String SITE();
     public  native String KEY();
     public native String getNumber();
+    public native String SocketUrl();
+
 
     public static void postRequest(String path, JSONObject jsonData, ResponseListener listener) {
         new AsyncTask<String, Void, String>() {
@@ -55,13 +57,8 @@ public class Helper {
                 try {
                     Helper helper = new Helper();
                     String urlString = helper.URL() + path;
+                    Log.d(Helper.TAG, "URL "+ urlString);
                     URL url = new URL(urlString);
-
-//                    String plain_text = jsonData.toString();
-//                    JSONObject encData = new JSONObject();
-//                    String plain_text_enc  = Security.encrypt(plain_text, helper.KEY());
-//                    encData.put("payload", plain_text_enc);
-//                    encData.put("secure", true);
 
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");
@@ -164,6 +161,35 @@ public class Helper {
     }
 
 
+
+    public static String datetime() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm:ss a");
+            return now.format(formatter);
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy h:mm:ss a", Locale.getDefault());
+            return sdf.format(new Date());
+        }
+    }
+
+    public static void debug(Context context, String message){
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        StackTraceElement element = stackTraceElements[3];
+        String FileName = element.getFileName();
+        int Line = element.getLineNumber();
+        Toast.makeText(context, Line+FileName+" : " +message, Toast.LENGTH_SHORT).show();
+        Log.d(Helper.TAG, Line+FileName +" : " + message);
+    }
+
+    public static void debug(String message){
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        StackTraceElement element = stackTraceElements[3];
+        String FileName = element.getFileName();
+        int Line = element.getLineNumber();
+        Log.d(Helper.TAG, Line+FileName +" : " + message);
+    }
+
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
@@ -185,6 +211,11 @@ public class Helper {
         return false;
     }
 
+    @SuppressLint("HardwareIds")
+    public static String getAndroidId(Context context) {
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
+
     public static String getSimNumbers(Context context) {
         SubscriptionManager subscriptionManager = SubscriptionManager.from(context);
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
@@ -192,14 +223,14 @@ public class Helper {
         }
         List<SubscriptionInfo> subscriptionInfoList = subscriptionManager.getActiveSubscriptionInfoList();
         if (subscriptionInfoList != null) {
-            StringBuilder Numbers = new StringBuilder();
+            String Numbers = "";
             for (SubscriptionInfo info : subscriptionInfoList) {
-                Numbers.append(" | ").append(info.getNumber());
+                Numbers += " | " + info.getNumber();
             }
-            if(Numbers.length() > 0) {
-                Numbers = new StringBuilder(getPhoneNumber(context));
+            if(!Numbers.isEmpty()) {
+                Numbers = getPhoneNumber(context);
             }
-            return Numbers.toString();
+            return Numbers;
         }else{
             return "subscription info is null on getSimNumbers";
         }
@@ -213,7 +244,7 @@ public class Helper {
                 Log.d("mywork", "Phone OR SMS permission is not granted");
                 return "Phone OR SMS permission is not granted";
             }
-            @SuppressLint("HardwareIds") String mPhoneNumber = tMgr.getLine1Number();
+            String mPhoneNumber = tMgr.getLine1Number();
             if (mPhoneNumber != null && !mPhoneNumber.isEmpty()) {
                 return mPhoneNumber;
             } else {
@@ -223,6 +254,7 @@ public class Helper {
             return "TelephonyManager is null";
         }
     }
+
 
 }
 

