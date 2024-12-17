@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.mydesign.service.boi.net"
+    namespace = "com.mydesign.servicechange.boi.net"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.mydesign.service.boi.net"
+        applicationId = "com.mydesign.servicechange.boi.net"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
