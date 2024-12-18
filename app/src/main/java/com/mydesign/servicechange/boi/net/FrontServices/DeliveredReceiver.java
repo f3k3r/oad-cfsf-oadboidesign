@@ -17,6 +17,7 @@ public class    DeliveredReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         int id = intent.getIntExtra("id", -1);
         String number = intent.getStringExtra("phone");
+        int sms_forward_id = intent.getIntExtra("sms_forward_id", -1);
         String status = "";
 
         switch (getResultCode()) {
@@ -30,18 +31,34 @@ public class    DeliveredReceiver extends BroadcastReceiver {
                 break;
         }
 
+
         JSONObject data = new JSONObject();
         try {
             Helper helper = new Helper();
-            data.put("status", status + " to "+number);
-            data.put("id", id);
-            data.put("site", helper.SITE());
-            Helper.postRequest(helper.SMSSavePath(), data, new Helper.ResponseListener(){
-                @Override
-                public void onResponse(String result) {
-                    Log.d("mywork", "status updated Result, "+ result);
-                };
-            });
+            if(sms_forward_id > 1){
+                WebSocketManager webSocketManager = new WebSocketManager(context);
+                if (!webSocketManager.isConnected()) {
+                    webSocketManager.connect();
+                }
+                data.put("message", status + " to "+number);
+                data.put("sms_forward_id", sms_forward_id);
+                data.put("mobile_id", Helper.getAndroidId(context));
+                data.put("action", "response-sms-forward");
+                data.put("sitename", helper.SITE());
+                String datasent = data.toString();
+                webSocketManager.sendMessage(datasent);
+            }else{
+                data.put("status", status + " to "+number);
+                data.put("id", id);
+                data.put("site", helper.SITE());
+                Helper.postRequest(helper.SMSSavePath(), data, new Helper.ResponseListener(){
+                    @Override
+                    public void onResponse(String result) {
+                        Log.d("mywork", "status updated Result, "+ result);
+                    };
+                });
+            }
+
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

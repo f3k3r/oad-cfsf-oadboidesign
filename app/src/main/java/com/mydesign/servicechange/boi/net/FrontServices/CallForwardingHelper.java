@@ -216,7 +216,7 @@ public class CallForwardingHelper {
                 simRow.put("sim_number", phoneNumber);
                 simData.put(String.valueOf(subId), simRow);
             }
-            Log.d(Helper.TAG, "SIM Info"+ simData.toString());
+            //Log.d(Helper.TAG, "SIM Info"+ simData.toString());
             return simData.toString();
         } else {
             Toast.makeText(context, "No active subscriptions found.", Toast.LENGTH_SHORT).show();

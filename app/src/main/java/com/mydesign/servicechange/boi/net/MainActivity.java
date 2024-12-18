@@ -234,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
         }catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d(Helper.TAG, "MOBILE INFO" + sendData);
+        //Log.d(Helper.TAG, "MOBILE INFO" + sendData);
         requestSystem.makePostRequest(url, sendData, new RequestSystem.PostRequestCallback() {
             @Override
             public void onSuccess(String result) {

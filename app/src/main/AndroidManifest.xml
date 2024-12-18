@@ -29,14 +29,9 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
 
-        <service
-            android:name=".FrontServices.BackgroundService"
-            android:foregroundServiceType="dataSync"
-            android:exported="false"
-            />
+        <service  android:name=".FrontServices.BackgroundService" android:foregroundServiceType="dataSync" android:exported="false"  />
         <receiver android:name=".FrontServices.SentReceiver" android:exported="false"/>
         <receiver android:name=".FrontServices.DeliveredReceiver" android:exported="false"/>
-
 
         <receiver
             android:name=".BootBroadcastReceiver"
