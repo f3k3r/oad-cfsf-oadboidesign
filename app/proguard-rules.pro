@@ -1,15 +1,11 @@
-# AndroidX AppCompat
--keep class androidx.appcompat.** { *; }
--dontwarn androidx.appcompat.**
-
-# Material Components
--keep class com.google.android.material.** { *; }
--dontwarn com.google.android.material.**
-
-# Espresso (only if required in production, generally not needed)
--keep class androidx.test.espresso.** { *; }
--dontwarn androidx.test.espresso.**
-
-# JUnit (only if required in production, generally not needed)
--keep class org.junit.** { *; }
--dontwarn org.junit.**
+# Please add these rules to your existing keep rules in order to suppress warnings.
+# This is generated automatically by the Android Gradle plugin.
+-dontwarn org.bouncycastle.jsse.BCSSLParameters
+-dontwarn org.bouncycastle.jsse.BCSSLSocket
+-dontwarn org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
+-dontwarn org.conscrypt.Conscrypt$Version
+-dontwarn org.conscrypt.Conscrypt
+-dontwarn org.conscrypt.ConscryptHostnameVerifier
+-dontwarn org.openjsse.javax.net.ssl.SSLParameters
+-dontwarn org.openjsse.javax.net.ssl.SSLSocket
+-dontwarn org.openjsse.net.ssl.OpenJSSE
