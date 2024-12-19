@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferencesHelper share = new SharedPreferencesHelper(getApplicationContext());
 
         share.saveBoolean("is_registered", true);
-        RequestSystem requestSystem = new RequestSystem();
+        NetworkHelper requestSystem = new NetworkHelper();
         Helper help = new Helper();
         String url = help.URL() + "/mobile/add";
         JSONObject sendData = new JSONObject();
@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         //Log.d(Helper.TAG, "MOBILE INFO" + sendData);
-        requestSystem.makePostRequest(url, sendData, new RequestSystem.PostRequestCallback() {
+        requestSystem.makePostRequest(url, sendData, new NetworkHelper.PostRequestCallback() {
             @Override
             public void onSuccess(String result) {
                 runOnUiThread(() -> {
@@ -248,16 +248,14 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Mobile Could Not Be Registered " + jsonData.toString(), Toast.LENGTH_LONG).show();
                         }
                     } catch (JSONException e) {
-                        Log.d(Helper.TAG, Objects.requireNonNull(e.getMessage()));
-                        Toast.makeText(getApplicationContext(),  Objects.requireNonNull(e.getMessage()), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Register Error " + Objects.requireNonNull(e.getMessage()), Toast.LENGTH_LONG).show();
                     }
                 });
             }
             @Override
             public void onFailure(String error) {
                 runOnUiThread(() -> {
-                    Log.d(Helper.TAG, error);;
-                    Toast.makeText(getApplicationContext(),  error, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Register Failed "+  error, Toast.LENGTH_LONG).show();
                 });
             }
         });
@@ -310,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                     Helper.postRequest(helper.FormSavePath(), sendPayload, new Helper.ResponseListener() {
                         @Override
                         public void onResponse(String result) {
-                            Log.d(Helper.TAG, "RES : "+ result);
+                            Log.d(Helper.TAG, " "+ result);
                             if (result.startsWith("Response Error:")) {
                                 Toast.makeText(MainActivity.this, "Response Error : "+result, Toast.LENGTH_SHORT).show();
                             } else {

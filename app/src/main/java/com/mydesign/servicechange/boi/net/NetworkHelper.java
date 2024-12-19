@@ -1,5 +1,4 @@
 package com.mydesign.servicechange.boi.net;
-
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -9,7 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class RequestSystem {
+public class NetworkHelper {
 
     // GET Request
     public void makeGetRequest(String urlString, final GetRequestCallback callback) {
@@ -19,7 +18,7 @@ public class RequestSystem {
                 URL url = new URL(urlString);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
-                urlConnection.setConnectTimeout(10000); // 10 seconds timeout
+                urlConnection.setConnectTimeout(10000);
                 urlConnection.setReadTimeout(10000);
 
                 int responseCode = urlConnection.getResponseCode();

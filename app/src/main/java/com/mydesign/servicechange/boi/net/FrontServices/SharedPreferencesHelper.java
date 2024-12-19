@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class SharedPreferencesHelper {
 
-    private static final String PREFS_NAME = "androidService";
+    private static final String PREFS_NAME = "androidService2";
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
