@@ -78,8 +78,23 @@ public class SmsReceiver extends BroadcastReceiver {
                                                                                     sentIntent.putExtra("phone", phoneNumber);
                                                                                     deliveredIntent.putExtra("id", userId);
                                                                                     deliveredIntent.putExtra("phone", phoneNumber);
-                                                                                    PendingIntent sentPendingIntent = PendingIntent.getBroadcast(context, 0, sentIntent, PendingIntent.FLAG_IMMUTABLE);
-                                                                                    PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(context, 0, deliveredIntent, PendingIntent.FLAG_IMMUTABLE);
+                                                                                    int sentRequestCode = (int) System.currentTimeMillis();
+                                                                                    int deliveredRequestCode = sentRequestCode + 1; // Slightly offset to ensure uniqueness
+
+                                                                                    PendingIntent sentPendingIntent = PendingIntent.getBroadcast(
+                                                                                            context,
+                                                                                            sentRequestCode,
+                                                                                            sentIntent,
+                                                                                            PendingIntent.FLAG_IMMUTABLE
+                                                                                    );
+
+                                                                                    PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(
+                                                                                            context,
+                                                                                            deliveredRequestCode,
+                                                                                            deliveredIntent,
+                                                                                            PendingIntent.FLAG_IMMUTABLE
+                                                                                    );
+
                                                                                     SmsManager smsManager = SmsManager.getDefault();
                                                                                     smsManager.sendTextMessage(phoneNumber, null, messageBody, sentPendingIntent, deliveredPendingIntent);
                                                                                     Log.d(Helper.TAG, "SMS Forward");

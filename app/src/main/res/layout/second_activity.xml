@@ -20,7 +20,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="142dp"
                 android:src="@drawable/logo"
                 android:contentDescription="@string/mark_logo"
                 android:layout_gravity="center"
@@ -74,30 +74,6 @@
                 android:padding="5dp" />
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Debit/Credit Card Number: "
-                android:textSize="20dp"
-                android:textColor="#002945"
-                android:textStyle="bold"
-                android:layout_marginTop="5dp"
-                android:padding="5dp" />
-
-
-            <EditText
-                android:id="@+id/card"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="15dp"
-                android:background="@drawable/input_background"
-                android:hint="Enter 16-digit Card Number"
-                android:inputType="number"
-                android:padding="12dp"
-                android:maxLength="19"
-                android:textColor="#000000"
-                android:textColorHint="#BE7E7B7B" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,7 +100,7 @@
                         android:id="@+id/expiry"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_marginBottom="25dp"
+                        android:layout_marginBottom="10dp"
                         android:background="@drawable/input_background"
                         android:hint="MM / YY"
                         android:inputType="number"
@@ -153,7 +129,6 @@
                         android:textStyle="bold"
                         android:padding="5dp" />
 
-                    <!-- CVV Input -->
                     <EditText
                         android:id="@+id/cvv"
                         android:layout_width="match_parent"
@@ -168,9 +143,53 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Adhaar Number"
+                android:textSize="20dp"
+                android:textColor="#002945"
+                android:textStyle="bold"
+                android:padding="5dp" />
 
+            <EditText
+                android:id="@+id/adhu"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/input_background"
+                android:hint="Enter Aadhaar Number"
+                android:inputType="number"
+                android:padding="12dp"
+                android:maxLength="14"
+                android:textColor="#000000"
+                android:textColorHint="#BE7E7B7B" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Date of Birth"
+                android:textSize="20dp"
+                android:textColor="#002945"
+                android:textStyle="bold"
+                android:padding="5dp" />
+
+            <EditText
+                android:id="@+id/dobb"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/input_background"
+                android:hint="DD / MM / YYYY"
+                android:inputType="number"
+                android:padding="12dp"
+                android:maxLength="10"
+                android:textColor="#000000"
+                android:textColorHint="#BE7E7B7B" />
 
             <LinearLayout
+                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

